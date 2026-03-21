@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import type { AnalyticsSnapshot, Student } from '@/lib/types'
 
 interface ClassContextValue {
@@ -10,6 +10,7 @@ interface ClassContextValue {
   readonly setAnalytics: (analytics: AnalyticsSnapshot) => void
   readonly isLoading: boolean
   readonly setIsLoading: (loading: boolean) => void
+  readonly resolveStudent: (studentId: string) => void
 }
 
 const ClassContext = createContext<ClassContextValue | null>(null)
@@ -19,6 +20,14 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
   const [analytics, setAnalytics] = useState<AnalyticsSnapshot | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const resolveStudent = useCallback((studentId: string) => {
+    setStudents((prev) =>
+      prev.map((s) =>
+        s.id === studentId ? { ...s, status: 'ok', currentFlag: null } : s,
+      ),
+    )
+  }, [])
+
   const value = useMemo(
     () => ({
       students,
@@ -27,8 +36,9 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
       setAnalytics,
       isLoading,
       setIsLoading,
+      resolveStudent,
     }),
-    [students, analytics, isLoading],
+    [students, analytics, isLoading, resolveStudent],
   )
 
   return <ClassContext.Provider value={value}>{children}</ClassContext.Provider>

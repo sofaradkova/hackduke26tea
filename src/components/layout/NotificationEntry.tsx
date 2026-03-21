@@ -4,8 +4,13 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import type { Notification } from '@/lib/types'
+import { useSession } from '@/context/session-context'
+import { useClassData } from '@/context/class-context'
 
 interface NotificationEntryProps {
   readonly notification: Notification
@@ -17,12 +22,22 @@ function formatTime(date: Date): string {
 }
 
 export default function NotificationEntry({ notification, onClick }: NotificationEntryProps) {
+  const { dismissNotification } = useSession()
+  const { resolveStudent } = useClassData()
+
+  const handleDismiss = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    resolveStudent(notification.studentId)
+    dismissNotification(notification.studentId)
+  }
+
   return (
     <ListItemButton
       onClick={() => onClick(notification.studentId)}
       sx={{
         borderRadius: 2,
         mb: 0.5,
+        pr: 1,
         '&:hover': { bgcolor: 'rgba(198,40,40,0.04)' },
       }}
     >
@@ -46,6 +61,19 @@ export default function NotificationEntry({ notification, onClick }: Notificatio
           </>
         }
       />
+      <Tooltip title="Mark as resolved">
+        <IconButton
+          size="small"
+          onClick={handleDismiss}
+          aria-label={`Resolve alert for ${notification.studentName}`}
+          sx={{
+            color: 'text.disabled',
+            '&:hover': { color: '#4CAF50', bgcolor: 'rgba(76,175,80,0.08)' },
+          }}
+        >
+          <CheckCircleOutlineIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
     </ListItemButton>
   )
 }

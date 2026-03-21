@@ -6,6 +6,7 @@ import type { Notification } from '@/lib/types'
 interface SessionContextValue {
   readonly notifications: readonly Notification[]
   readonly addNotification: (notification: Notification) => void
+  readonly dismissNotification: (studentId: string) => void
   readonly isPanelCollapsed: boolean
   readonly togglePanel: () => void
   readonly selectedStudentId: string | null
@@ -23,6 +24,10 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     setNotifications((prev) => [notification, ...prev])
   }, [])
 
+  const dismissNotification = useCallback((studentId: string) => {
+    setNotifications((prev) => prev.filter((n) => n.studentId !== studentId))
+  }, [])
+
   const togglePanel = useCallback(() => {
     setIsPanelCollapsed((prev) => !prev)
   }, [])
@@ -31,12 +36,13 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     () => ({
       notifications,
       addNotification,
+      dismissNotification,
       isPanelCollapsed,
       togglePanel,
       selectedStudentId,
       setSelectedStudentId,
     }),
-    [notifications, addNotification, isPanelCollapsed, togglePanel, selectedStudentId],
+    [notifications, addNotification, dismissNotification, isPanelCollapsed, togglePanel, selectedStudentId],
   )
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>

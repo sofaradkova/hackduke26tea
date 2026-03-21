@@ -17,7 +17,12 @@ import CloseIcon from '@mui/icons-material/Close'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import AssignmentIcon from '@mui/icons-material/Assignment'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import Button from '@mui/material/Button'
+import DialogActions from '@mui/material/DialogActions'
 import type { Student } from '@/lib/types'
+import { useSession } from '@/context/session-context'
+import { useClassData } from '@/context/class-context'
 
 interface StudentDetailModalProps {
   readonly student: Student | null
@@ -30,9 +35,18 @@ function formatDateTime(date: Date): string {
 }
 
 export default function StudentDetailModal({ student, open, onClose }: StudentDetailModalProps) {
+  const { dismissNotification } = useSession()
+  const { resolveStudent } = useClassData()
+
   if (!student) return null
 
   const isFlagged = student.status === 'flagged'
+
+  const handleResolve = () => {
+    resolveStudent(student.id)
+    dismissNotification(student.id)
+    onClose()
+  }
 
   return (
     <Dialog
@@ -157,6 +171,26 @@ export default function StudentDetailModal({ student, open, onClose }: StudentDe
           </Box>
         )}
       </DialogContent>
+
+      {isFlagged && (
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button
+            variant="contained"
+            startIcon={<CheckCircleIcon />}
+            onClick={handleResolve}
+            sx={{
+              bgcolor: '#4CAF50',
+              '&:hover': { bgcolor: '#388E3C' },
+              borderRadius: 2,
+            }}
+          >
+            Mark as Resolved
+          </Button>
+          <Button variant="text" onClick={onClose} sx={{ color: 'text.secondary' }}>
+            Close
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   )
 }
