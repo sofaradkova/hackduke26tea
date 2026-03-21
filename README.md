@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ClassWatch — Teacher Dashboard
 
-## Getting Started
+An AI-powered classroom monitoring platform that gives teachers live visibility into student work, surfaces alerts when students are struggling, and provides class-wide analytics.
 
-First, run the development server:
+## Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<!-- AUTO-GENERATED -->
+## Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with hot reload |
+| `npm run build` | Production build with type checking |
+| `npm start` | Start production server |
+| `npm run lint` | Run ESLint |
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `NEXT_PUBLIC_API_URL` | No | URL for live student data API (future) | `https://api.classwatch.io` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Copy `.env.example` to `.env.local` and fill in values.
+<!-- END AUTO-GENERATED -->
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── page.tsx            # Home — Class List screen
+│   └── class/[classId]/    # Live Class Dashboard
+├── components/             # React components
+│   ├── layout/             # AppShell, Sidebar, TopBar, NotificationPanel
+│   ├── class-list/         # ClassListGrid, ClassCard
+│   ├── dashboard/          # StudentGrid, StudentCard
+│   ├── student-modal/      # StudentDetailModal
+│   └── analytics/          # AnalyticsView, MetricCard
+├── context/                # ClassContext, SessionContext
+├── hooks/                  # useStudentPolling
+└── lib/
+    ├── types.ts            # TypeScript interfaces (Student, Class, Notification, AIFlag)
+    ├── theme.ts            # Material 3 custom theme
+    └── services/           # Abstracted data layer
+        ├── class-service.ts        # Interface
+        └── mock-class-service.ts   # Mock implementation
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Swapping Mock Data for a Real API
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All data access is behind the service interface in `src/lib/services/class-service.ts`. To wire up a live API:
+
+1. Create a new implementation of `ClassService` (e.g., `api-class-service.ts`)
+2. Update `src/lib/services/index.ts` to export the new implementation
+3. No component changes required
+
+## Tech Stack
+
+- **Next.js 15** — App Router
+- **Material UI 7** — Material 3 components
+- **TypeScript 5** — Strict mode
+- **React 19**

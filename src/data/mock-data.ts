@@ -101,6 +101,13 @@ const csStudents: readonly Student[] = [
 
 export const MOCK_CLASSES: readonly ClassData[] = [
   {
+    id: 'class-demo',
+    name: 'Demo Class',
+    subject: 'Mathematics',
+    studentCount: 1,
+    students: [],
+  },
+  {
     id: 'class-algebra',
     name: 'Algebra II — Period 3',
     subject: 'Mathematics',
