@@ -18,7 +18,7 @@ interface BackendDemoResponse {
     flagCategory: string | null
     confusionHighlights: string[]
     lastCheckedAt: string
-    thumbnailUrl: null
+    thumbnailUrl: string | null
   }>
 }
 
@@ -54,12 +54,14 @@ function mapBackendStudent(
     id: student.id,
     name: student.name,
     avatarUrl: null,
-    thumbnailUrl: generateWhiteboardSvg(
-      student.id,
-      problemSetTitle,
-      student.progressPercent,
-      student.status === 'flagged',
-    ),
+    thumbnailUrl: student.thumbnailUrl
+      ? `${process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:3001'}${student.thumbnailUrl}`
+      : generateWhiteboardSvg(
+          student.id,
+          problemSetTitle,
+          student.progressPercent,
+          student.status === 'flagged',
+        ),
     status: student.status,
     currentFlag:
       student.status === 'flagged' && student.flagReason
