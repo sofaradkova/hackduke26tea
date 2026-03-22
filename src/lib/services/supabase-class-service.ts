@@ -194,4 +194,15 @@ export class SupabaseClassService implements ClassService {
     const students = await this.getStudents(classId)
     return computeAnalytics(students)
   }
+
+  async resolveStudent(classId: string, studentId: string): Promise<Student | null> {
+    // TODO: Implement Supabase update when live data is wired.
+    // For now, only mock-backed classes support resolve.
+    const students = await fetchSupabaseStudents(classId)
+    if (students) {
+      // Class has live Supabase data — resolve is not yet supported
+      return null
+    }
+    return mockService.resolveStudent(classId, studentId)
+  }
 }

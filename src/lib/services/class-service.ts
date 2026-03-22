@@ -5,4 +5,5 @@ export interface ClassService {
   getClass(classId: string): Promise<ClassData | null>
   getStudents(classId: string): Promise<readonly Student[]>
   getAnalytics(classId: string): Promise<AnalyticsSnapshot>
+  resolveStudent(classId: string, studentId: string): Promise<Student | null>
 }

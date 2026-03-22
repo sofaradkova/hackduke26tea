@@ -139,6 +139,18 @@ export class MockClassService implements ClassService {
     return updated
   }
 
+  async resolveStudent(classId: string, studentId: string): Promise<Student | null> {
+    const students = this.classStudentStates.get(classId)
+    if (!students) return null
+    const idx = students.findIndex((s) => s.id === studentId)
+    if (idx === -1) return null
+    const resolved = { ...students[idx], status: 'ok' as const, currentFlag: null }
+    const updated = [...students]
+    updated[idx] = resolved
+    this.classStudentStates.set(classId, updated)
+    return resolved
+  }
+
   private categoryToLabel(category: string): string {
     const labels: Record<string, string> = {
       'wrong-approach': 'Wrong approach or formula',
