@@ -22,6 +22,7 @@ export interface G1AlertEntry {
   readonly confidence: number
   readonly triggered_at: string
   readonly progress_percent: number
+  readonly confusion_highlights: readonly string[]
   readonly g1_text: string
 }
 
@@ -55,6 +56,7 @@ export interface G1StudentEntry {
   readonly status: StudentStatus
   readonly progress_percent: number
   readonly flag_reason: string | null
+  readonly flag_category: FlagCategory | null
   readonly problem_set: string
   readonly last_checked_at: string
   readonly g1_text: string

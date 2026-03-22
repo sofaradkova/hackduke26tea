@@ -30,6 +30,7 @@ export async function GET(
         status: s.status,
         progress_percent: s.progressPercent,
         flag_reason: s.currentFlag?.reason ?? null,
+        flag_category: s.currentFlag?.category ?? null,
         problem_set: s.problemSetTitle,
         last_checked_at: s.lastCheckedAt.toISOString(),
         g1_text: formatStudentLine(s.name, s.status, s.progressPercent),

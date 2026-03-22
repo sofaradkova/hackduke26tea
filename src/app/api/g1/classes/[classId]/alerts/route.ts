@@ -39,6 +39,7 @@ export async function GET(
         confidence: s.currentFlag!.confidenceScore,
         triggered_at: s.currentFlag!.triggeredAt.toISOString(),
         progress_percent: s.progressPercent,
+        confusion_highlights: s.currentFlag!.confusionHighlights,
         g1_text: formatAlertLine(s.name, s.currentFlag!.reason, s.progressPercent),
       })),
       total_flagged: flagged.length,

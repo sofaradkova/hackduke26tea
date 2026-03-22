@@ -34,11 +34,11 @@
 ```typescript
 {
   id: string
-  reason: string               // e.g. "Wrong formula applied in step 2"
-  category: 'wrong-approach' | 'stuck' | 'off-topic' | 'calculation-error'
+  reason: string               // Full AI-generated explanation (may be a long sentence)
+  category: 'wrong-approach' | 'stuck' | 'off-topic' | 'calculation-error' | 'success' | 'unsure'
   confidenceScore: number      // 0–1
   triggeredAt: string          // ISO timestamp
-  confusionHighlights: string[] // Regions/text the student marked as confusing
+  confusionHighlights: string[] // AI-identified problem areas, e.g. ["no algebraic work shown", "image unrelated to problem"]
 }
 ```
 
@@ -69,19 +69,19 @@
 
 ---
 
-## Open Questions (Blocking)
+## Integration Status
 
-These must be answered before we can wire the real API.
+These questions were blocking. All are now resolved.
 
-1. **Whiteboard thumbnails** — Is `thumbnailUrl` a URL we fetch, or a base64 blob embedded in the response? We poll every 5–10s so payload size matters.
+1. **Whiteboard thumbnails** — Images stored in Supabase Storage bucket (`student_snapshots`). The service generates signed URLs (1-hour expiry). Falls back to SVG placeholders when no image is present.
 
-2. **Flag resolution** — Does `currentFlag` go `null` automatically when AI clears it, or does a teacher action (e.g. "Mark as resolved") clear it on your end?
+2. **Flag resolution** — The AI writes new snapshots with updated status; the dashboard polls every 7s and detects transitions. Teacher "Mark as resolved" is UI-only for now (clears the flag locally in mock mode; Supabase update pending).
 
-3. **Polling vs WebSocket** — Should we poll `GET /classes/:id/students` every 5s, or will you push updates via WebSocket or SSE?
+3. **Polling** — Polling at 7s intervals via `useStudentPolling` hook. Supabase Realtime is not used (sufficient for demo).
 
-4. **confusionHighlights format** — What does the student mark? An array of text strings, bounding boxes, step numbers, or something else?
+4. **confusionHighlights format** — Array of short AI-generated text strings identifying specific issues (e.g. `["no algebraic work shown", "image unrelated to problem"]`). Stored as `jsonb` in `ai_flags.confusion_highlights`.
 
-5. **Class IDs** — Are they UUIDs, integers, or slugs? This affects our URL routing.
+5. **Class IDs** — String slugs (e.g. `class-demo`, `class-algebra-ii`). Defined in mock data; Supabase rows must use matching `class_id` values.
 
 ---
 
@@ -111,11 +111,28 @@ All GET responses include:
   student_id: string
   student_name: string
   flag_reason: string
-  flag_category: 'wrong-approach' | 'stuck' | 'off-topic' | 'calculation-error'
+  flag_category: 'wrong-approach' | 'stuck' | 'off-topic' | 'calculation-error' | 'success' | 'unsure'
   confidence: number           // 0–1
   triggered_at: string         // ISO timestamp
   progress_percent: number     // 0–100
+  confusion_highlights: string[] // AI-identified problem areas
   g1_text: string              // e.g. "! Jamie Chen: wrong formula  45%"
+}
+```
+
+### G1 Student Entry
+
+```typescript
+{
+  id: string
+  name: string
+  status: 'ok' | 'flagged' | 'loading'
+  progress_percent: number     // 0–100
+  flag_reason: string | null
+  flag_category: 'wrong-approach' | 'stuck' | 'off-topic' | 'calculation-error' | 'success' | 'unsure' | null
+  problem_set: string
+  last_checked_at: string      // ISO timestamp
+  g1_text: string
 }
 ```
 

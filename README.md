@@ -46,7 +46,7 @@ src/
 │   ├── class-list/                 # ClassListGrid, ClassCard
 │   ├── dashboard/                  # StudentGrid, StudentCard
 │   ├── student-modal/              # StudentDetailModal
-│   └── analytics/                  # AnalyticsView, MetricCard
+│   └── analytics/                  # AnalyticsHeader (inline metrics bar), AnalyticsView, MetricCard
 ├── context/                        # ClassContext, SessionContext
 ├── hooks/                          # useStudentPolling
 └── lib/
@@ -73,13 +73,14 @@ REST API at `/api/g1/` for the Even G1 companion app. All GET responses include 
 
 **Polling recommendations:** alerts every 5s, summary every 10s, students every 15s, classes once at launch. Send `If-None-Match: <data_hash>` to get `304 Not Modified` when data hasn't changed.
 
-## Swapping Mock Data for a Real API
+## Data Sources
 
-All data access is behind the service interface in `src/lib/services/class-service.ts`. To wire up a live API:
+`SupabaseClassService` is the active implementation. It reads from two Supabase tables:
 
-1. Create a new implementation of `ClassService` (e.g., `api-class-service.ts`)
-2. Update `src/lib/services/index.ts` to export the new implementation
-3. No component changes required — both the web dashboard and G1 API use the same service
+- **`student_snapshots`** — one row per AI analysis cycle per student (`class_id`, `student_id`, `status`, `current_flag_id`, `storage_path`, etc.)
+- **`ai_flags`** — AI-generated flag details (`reason`, `category`, `confidence_score`, `confusion_highlights`), linked via `current_flag_id` FK
+
+The service falls back to seeded mock data (`MockClassService`) for any class not present in Supabase. To add a new data source, implement the `ClassService` interface in `src/lib/services/class-service.ts` and update `src/lib/services/index.ts`.
 
 ## Tech Stack
 
