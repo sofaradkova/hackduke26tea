@@ -1,6 +1,10 @@
 import type { ClassService } from './class-service'
-import { SupabaseClassService } from './supabase-class-service'
+import { MockClassService } from './mock-class-service'
+import { DemoClassService } from './demo-class-service'
 
 export type { ClassService }
 
-export const classService: ClassService = new SupabaseClassService()
+export const classService: ClassService =
+  process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+    ? new DemoClassService()
+    : new MockClassService()
