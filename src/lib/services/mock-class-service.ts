@@ -157,6 +157,8 @@ export class MockClassService implements ClassService {
       'stuck': 'Students getting stuck',
       'off-topic': 'Working on wrong problem',
       'calculation-error': 'Calculation errors',
+      'success': 'Correct solution found',
+      'unsure': 'Uncertain or confused',
     }
     return labels[category] ?? category
   }

@@ -1,4 +1,4 @@
-export type FlagCategory = 'wrong-approach' | 'stuck' | 'off-topic' | 'calculation-error'
+export type FlagCategory = 'wrong-approach' | 'stuck' | 'off-topic' | 'calculation-error' | 'success' | 'unsure'
 
 export type StudentStatus = 'ok' | 'flagged' | 'loading'
 

@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from 'react'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import AppShell from '@/components/layout/AppShell'
 import TopBar from '@/components/layout/TopBar'
 import StudentGrid from '@/components/dashboard/StudentGrid'
 import StudentDetailModal from '@/components/student-modal/StudentDetailModal'
-import AnalyticsView from '@/components/analytics/AnalyticsView'
+import AnalyticsHeader from '@/components/analytics/AnalyticsHeader'
 import { useStudentPolling } from '@/hooks/use-student-polling'
 import { useClassData } from '@/context/class-context'
 import { useSession } from '@/context/session-context'
@@ -18,7 +17,6 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ classId, className }: DashboardClientProps) {
-  const [activeTab, setActiveTab] = useState(0)
   const { students, analytics, isLoading } = useClassData()
   const { selectedStudentId, setSelectedStudentId } = useSession()
 
@@ -29,7 +27,7 @@ export default function DashboardClient({ classId, className }: DashboardClientP
   if (isLoading) {
     return (
       <AppShell
-        topBar={<TopBar title={className} showTabs showPanelToggle activeTab={activeTab} onTabChange={setActiveTab} />}
+        topBar={<TopBar title={className} showPanelToggle />}
         showPanel
       >
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
@@ -41,14 +39,10 @@ export default function DashboardClient({ classId, className }: DashboardClientP
 
   return (
     <AppShell
-      topBar={<TopBar title={className} showTabs showPanelToggle activeTab={activeTab} onTabChange={setActiveTab} />}
+      topBar={<AnalyticsHeader title={className} analytics={analytics} showPanelToggle />}
       showPanel
     >
-      {activeTab === 0 ? (
-        <StudentGrid students={students} onStudentClick={setSelectedStudentId} />
-      ) : (
-        analytics && <AnalyticsView analytics={analytics} />
-      )}
+      <StudentGrid students={students} onStudentClick={setSelectedStudentId} />
 
       <StudentDetailModal
         student={selectedStudent}

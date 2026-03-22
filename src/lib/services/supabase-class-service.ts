@@ -7,6 +7,15 @@ import { MockClassService } from './mock-class-service'
 const STORAGE_BUCKET = 'student_snapshots'
 const SIGNED_URL_EXPIRY_SECONDS = 3600
 
+interface AiFlagRow {
+  id: string
+  reason: string
+  category: string
+  confidence_score: number
+  triggered_at: string
+  confusion_highlights: string[] | null
+}
+
 interface SnapshotRow {
   id: string
   student_id: string
@@ -16,11 +25,12 @@ interface SnapshotRow {
   thumbnail_url: string | null
   storage_path: string | null
   status: string
-  current_flag: unknown
+  current_flag_id: string | null
   problem_set_title: string | null
   progress_percent: number
   last_checked_at: string
   captured_at: string
+  ai_flags: AiFlagRow | AiFlagRow[] | null
 }
 
 const mockService = new MockClassService()
@@ -33,20 +43,10 @@ async function getSignedThumbnailUrl(storagePath: string): Promise<string | null
   return data.signedUrl
 }
 
-function parseFlag(raw: unknown): AIFlag | null {
-  if (!raw || typeof raw !== 'object') return null
-  const f = raw as Record<string, unknown>
-  if (!f.reason) return null
-  return {
-    id: String(f.id ?? crypto.randomUUID()),
-    reason: String(f.reason),
-    category: (f.category as FlagCategory) ?? 'wrong-approach',
-    confidenceScore: typeof f.confidence_score === 'number' ? f.confidence_score : 0.85,
-    triggeredAt: f.triggered_at ? new Date(String(f.triggered_at)) : new Date(),
-    confusionHighlights: Array.isArray(f.confusion_highlights)
-      ? (f.confusion_highlights as string[])
-      : [],
-  }
+function resolveFlag(raw: AiFlagRow | AiFlagRow[] | null): AiFlagRow | null {
+  if (!raw) return null
+  if (Array.isArray(raw)) return raw[0] ?? null
+  return raw
 }
 
 async function rowToStudent(row: SnapshotRow): Promise<Student> {
@@ -61,9 +61,26 @@ async function rowToStudent(row: SnapshotRow): Promise<Student> {
     thumbnailUrl = generateWhiteboardSvg(row.student_id, row.problem_set_title ?? 'Problem Set', row.progress_percent, row.status === 'flagged')
   }
 
-  const flag = row.status === 'flagged' ? parseFlag(row.current_flag) : null
-  // DB 'loading' means "awaiting AI analysis" — show as 'ok' in the UI (no issues detected)
-  const status: StudentStatus = row.status === 'flagged' ? 'flagged' : 'ok'
+  // Normalize ai_flags (PostgREST may return array or single object)
+  const aiFlag = resolveFlag(row.ai_flags)
+
+  // A 'success' flag means the student is doing well — treat as OK, not flagged
+  const isActuallyFlagged = row.status === 'flagged'
+    && aiFlag != null
+    && aiFlag.category !== 'success'
+
+  const flag: AIFlag | null = isActuallyFlagged && aiFlag
+    ? {
+        id: aiFlag.id,
+        reason: aiFlag.reason,
+        category: (aiFlag.category as FlagCategory) ?? 'wrong-approach',
+        confidenceScore: aiFlag.confidence_score ?? 0.85,
+        triggeredAt: aiFlag.triggered_at ? new Date(aiFlag.triggered_at) : new Date(),
+        confusionHighlights: aiFlag.confusion_highlights ?? [],
+      }
+    : null
+
+  const status: StudentStatus = isActuallyFlagged ? 'flagged' : 'ok'
 
   return {
     id: row.student_id,
@@ -106,6 +123,8 @@ function computeAnalytics(students: readonly Student[]): AnalyticsSnapshot {
     'stuck': 'Students getting stuck',
     'off-topic': 'Working on wrong problem',
     'calculation-error': 'Calculation errors',
+    'success': 'Correct solution found',
+    'unsure': 'Uncertain or confused',
   }
 
   let mostCommonProblem = 'None detected'
@@ -130,7 +149,29 @@ function computeAnalytics(students: readonly Student[]): AnalyticsSnapshot {
 async function fetchSupabaseStudents(classId: string): Promise<readonly Student[] | null> {
   const { data, error } = await supabase
     .from('student_snapshots')
-    .select('*')
+    .select(`
+      id,
+      student_id,
+      class_id,
+      name,
+      avatar_url,
+      thumbnail_url,
+      storage_path,
+      status,
+      current_flag_id,
+      problem_set_title,
+      progress_percent,
+      last_checked_at,
+      captured_at,
+      ai_flags (
+        id,
+        reason,
+        category,
+        confidence_score,
+        triggered_at,
+        confusion_highlights
+      )
+    `)
     .eq('class_id', classId)
     .order('captured_at', { ascending: false })
 
