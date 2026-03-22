@@ -1,0 +1,32 @@
+{
+  "name": "remotion-test-project",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A minimal Remotion test project",
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render src/index.ts TestComposition out/test-video.mp4",
+    "render:education": "remotion render src/index.ts APCalcFRQWalkthrough out/ap-calc-frq-walkthrough.mp4",
+    "render:kimi-3d": "remotion render src/index.ts kimi-SpinningToy3D out/kimi-SpinningToy3D.mp4 --gl=angle",
+    "render:plottwist": "remotion render src/index.ts PlotTwistTrailer out/plot-twist-trailer.mp4",
+    "render:plottwist:scenes": "remotion render src/index.ts scene-1-a-story-begins out/plottwist-scene-1.mp4 && remotion render src/index.ts scene-2-first-twist out/plottwist-scene-2.mp4 && remotion render src/index.ts scene-3-alley-cinematic out/plottwist-scene-3.mp4 && remotion render src/index.ts scene-4-story-memory-updated out/plottwist-scene-4.mp4 && remotion render src/index.ts scene-5-second-prompt out/plottwist-scene-5.mp4 && remotion render src/index.ts scene-6-boat-cinematic out/plottwist-scene-6.mp4 && remotion render src/index.ts scene-7-ending-card out/plottwist-scene-7.mp4",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^8.17.12",
+    "@remotion/google-fonts": "4.0.423",
+    "@remotion/three": "4.0.423",
+    "@remotion/transitions": "^4.0.438",
+    "@types/three": "0.183.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "^4.0.423",
+    "three": "0.183.2"
+  },
+  "devDependencies": {
+    "@remotion/cli": "^4.0.423",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "typescript": "5.7.3"
+  }
+}

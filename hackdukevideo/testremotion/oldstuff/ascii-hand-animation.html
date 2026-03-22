@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASCII Hand Animation</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #ececec;
+      font-family: Menlo, Monaco, Consolas, monospace;
+      overflow: hidden;
+    }
+
+    .stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: #ececec;
+    }
+
+    .left-panel {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 420px;
+      background: rgba(255, 255, 255, 0.2);
+      border-right: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .divider-marker {
+      position: absolute;
+      left: 418px;
+      top: 0;
+      width: 3px;
+      height: 28px;
+      background: #ef4444;
+    }
+
+    .brand {
+      position: absolute;
+      left: 95px;
+      top: 90px;
+      color: #8b8b8b;
+      font-size: clamp(16px, 2.2vw, 40px);
+      font-weight: 600;
+      letter-spacing: -1px;
+    }
+
+    .ascii-wrap {
+      position: absolute;
+      left: 22px;
+      bottom: 120px;
+      width: 690px;
+      height: 430px;
+    }
+
+    .hand-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .ascii-layer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      white-space: pre;
+      color: #171717;
+      font-size: 24px;
+      line-height: 1.02;
+      letter-spacing: 1px;
+      font-weight: 700;
+      user-select: none;
+      transform-origin: left center;
+      will-change: opacity;
+    }
+
+    @media (max-width: 900px) {
+      .left-panel { width: 300px; }
+      .divider-marker { left: 298px; }
+      .brand { left: 40px; top: 40px; }
+      .ascii-wrap { transform: scale(0.72); transform-origin: bottom left; bottom: 50px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="left-panel"></div>
+    <div class="divider-marker"></div>
+    <div class="brand">skale.solutions</div>
+    <div id="ascii-wrap" class="ascii-wrap" aria-label="Animated ASCII hand turning">
+      <div id="hand-stage" class="hand-stage">
+        <pre id="ascii-a" class="ascii-layer"></pre>
+        <pre id="ascii-b" class="ascii-layer"></pre>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const HAND_FRAMES = [
+`F F F $ $ $ $
+F $ $ $ $ $ $ $ F F F F
+$ $ $ $ $ $ $      F   $
+V V V V V V $ F     $   V
+V V V V V $ $ $ $ $ V
+* * * * * * * * * * *
+
+                $ $
+              $ $ $          $ $
+              $ $ $          $ $
+         V $ $ $ $ $ F   F $ $ V
+        V * * $ F $ V   F F $ V V
+        * * * $ F $ V V V V $
+$ F      V $ $ $ $ F V F $ V V
+F F F F   $ $ $ $ $ $ F F V V V
+F F F F F F F F F $ F F F $ V V
+$ $ $ F F F F F F F F F $ $ $
+V V V V $ $ $ $ $ $ F $ $ $
+V V V V V V V V V V V V V V $
+V V * * * * * * * * * V
+V V V V V V V V V V V V V
+V * * * * * V V V V V
+* * V V V`,
+`            F F F
+          $ $ $ $ $
+        V V V V V V
+      * * * * * * *
+
+             $ $
+           $ $ $ $ $
+       V V V V V V V V
+     * * * * * * * * *
+
+      $ $ $ $ $ $ $ $ $
+    V V V V V V V V V V V
+  * * * * * * * * * * * *
+
+      V V V V V V V
+        * * * * *
+          V V V`,
+`                F
+               $ $
+              V V V
+             * * * *
+
+              $ $ $
+             V V V V
+            * * * * *
+
+             $ $ $
+            V V V V
+           * * * * *
+
+            V V V
+             * *
+              V`,
+`            F F
+          $ $ $ $
+        V V V V V
+      * * * * * *
+
+           $ $ $ $
+         V V V V V V
+       * * * * * * *
+
+        $ $ $ $ $ $ $
+      V V V V V V V V V
+    * * * * * * * * * *
+
+      V V V V V V
+        * * * *
+          V V`
+    ];
+
+    const stageEl = document.getElementById('hand-stage');
+    const layerA = document.getElementById('ascii-a');
+    const layerB = document.getElementById('ascii-b');
+
+    const smoothstep = (t) => t * t * (3 - 2 * t);
+
+    let frame = 0;
+    const FRAMES_PER_STEP = 36;
+
+    const tick = () => {
+      const totalSteps = HAND_FRAMES.length;
+      const stepProgress = (frame / FRAMES_PER_STEP) % totalSteps;
+      const currentIndex = Math.floor(stepProgress);
+      const nextIndex = (currentIndex + 1) % totalSteps;
+      const localT = smoothstep(stepProgress - currentIndex);
+
+      layerA.textContent = HAND_FRAMES[currentIndex];
+      layerB.textContent = HAND_FRAMES[nextIndex];
+      layerA.style.opacity = `${1 - localT}`;
+      layerB.style.opacity = `${localT}`;
+
+      const cycle = (frame / (FRAMES_PER_STEP * totalSteps)) * Math.PI * 2;
+      const rotateY = Math.sin(cycle) * 24;
+      const rotateX = Math.cos(cycle * 0.5) * 2;
+      const floatY = Math.sin(frame * 0.04) * 2;
+
+      stageEl.style.transform = `translateY(${floatY}px) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+
+      frame += 1;
+      requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

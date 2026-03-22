@@ -1,0 +1,60 @@
+{
+  "id": "PlotTwistTrailer",
+  "title": "PlotTwist Hyper-Cinematic Trailer",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "scenes": [
+    {
+      "id": "Scene1-NoirDesk",
+      "type": "noirDesk",
+      "durationInFrames": 60,
+      "data": {
+        "title": "Case File: Impossible",
+        "descriptor": "Noir detective office, rain-slashed windows, dramatic push-in.",
+        "character": "A trench-coat pigeon slams one wing on the desk."
+      }
+    },
+    {
+      "id": "Scene2-NeonWordBurst",
+      "type": "neonWordBurst",
+      "durationInFrames": 90,
+      "data": {
+        "headline": "Reality detonates into neon sci-fi space",
+        "words": ["BETRAYAL", "SWEDEN", "EXPLOSION", "ROMANCE"]
+      }
+    },
+    {
+      "id": "Scene3-ScriptAssembly",
+      "type": "scriptAssembly",
+      "durationInFrames": 90,
+      "data": {
+        "headline": "A giant holographic screenplay assembles itself",
+        "fragments": [
+          "INT. COSMIC DANCEFLOOR - NIGHT",
+          "A ROBOT confesses to the moon",
+          "The pigeon steals the spotlight",
+          "Everything is canon. Nothing is safe"
+        ]
+      }
+    },
+    {
+      "id": "Scene4-GlitchCrowd",
+      "type": "glitchCrowd",
+      "durationInFrames": 60,
+      "data": {
+        "headline": "Robots with smartphones yell plot twists",
+        "chants": ["IT WAS THE DJ!", "WE'RE IN SWEDEN?!", "KISS DURING EXPLOSION!"]
+      }
+    },
+    {
+      "id": "Scene5-FinalCard",
+      "type": "finalCard",
+      "durationInFrames": 60,
+      "data": {
+        "title": "PLOT TWIST",
+        "subtitle": "Absurd. Epic. Unpredictable."
+      }
+    }
+  ]
+}

@@ -1,0 +1,485 @@
+# =============================================================================
+# HACKDUKE MAIN - COMPREHENSIVE GITIGNORE
+# Covers: Node.js, TypeScript, Python, Swift, General OS/IDE files
+# =============================================================================
+
+# =============================================================================
+# SECURITY - NEVER COMMIT THESE!
+# =============================================================================
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+.env.*
+!.env.example
+!.env.template
+
+# API Keys and credentials
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+credentials.*.json
+service-account*.json
+google-credentials.json
+aws-credentials.json
+
+# Secrets
+secrets/
+secrets.*
+*.secret
+.secret
+
+# =============================================================================
+# NODE.JS / JAVASCRIPT / TYPESCRIPT
+# =============================================================================
+# Dependencies
+node_modules/
+npm-shrinkwrap.json
+.yarn-integrity
+.pnpm-debug.log*
+package-lock.json.bak
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+.vite-ssg-dist
+.vite-inspect
+.output
+.output/
+
+# TypeScript
+*.tsbuildinfo
+*.js.map
+*.d.ts.map
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.prettiercache
+.vite/
+*.tgz
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.tern-project
+
+# Misc
+*.pid
+*.seed
+*.pid.lock
+.lock-wscript
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+# Virtual environments
+venv/
+ENV/
+env/
+.env/
+.venv/
+__pypackages__/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# Manim specific
+manim/media/
+manim/partial_movie_files/
+**/manim/media/
+**/partial_movie_files/
+**/videos/
+*.mp4
+*.mov
+*.avi
+*.mkv
+!**/public/**/*.mp4
+!**/assets/**/*.mp4
+*.wav
+*.mp3
+*.ogg
+
+# =============================================================================
+# SWIFT / XCODE / IOS
+# =============================================================================
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/xcshareddata/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+!*.xcworkspace/xcshareddata/
+!*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
+# Build directories
+build/
+DerivedData/
+.build/
+
+# Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+
+# Other
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.build/
+Packages/
+Package.pins
+Package.resolved
+*.xcodeproj
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+# CocoaPods
+Pods/
+*.xcworkspace
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+fastlane/*.json
+
+# =============================================================================
+# REACT / NEXT.JS / VITE
+# =============================================================================
+# Next.js
+.next/
+out/
+
+# Vite
+*.local
+
+# Remix
+.cache/
+build/
+public/build/
+
+# Gatsby
+.cache/
+/build/
+/public/build/
+
+# Remix
+.cache/
+build/
+public/build/
+
+# Astro
+.astro/
+
+# SvelteKit
+.svelte-kit/
+
+# =============================================================================
+# IDE / EDITOR
+# =============================================================================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+# IntelliJ / WebStorm / PyCharm / RubyMine
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Atom
+.atom/
+
+# Nova
+.nova/
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# =============================================================================
+# OS FILES
+# =============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+*.swp
+*.lock
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.nfs*
+.directory
+.Trash-*
+
+# =============================================================================
+# DATABASE
+# =============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# =============================================================================
+# DOCKER
+# =============================================================================
+Dockerfile.local
+docker-compose.override.yml
+.dockerignore
+
+# =============================================================================
+# DEPLOYMENT / CLOUD
+# =============================================================================
+# Vercel
+.vercel
+
+# Netlify
+.netlify
+
+# Firebase
+.firebase/
+
+# AWS
+.aws/
+
+# GCP
+.gcp/
+
+# Heroku
+.heroku/
+
+# =============================================================================
+# PROJECT SPECIFIC
+# =============================================================================
+# Local LLM video captioning (as mentioned in existing gitignore)
+local-llm-video-captioning/
+
+# Uploads
+uploads/
+uploads/*
+
+# Git worktrees
+.worktrees/
+
+# Screenshots / captures (except assets)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+!**/assets/**/*.png
+!**/assets/**/*.jpg
+!**/assets/**/*.gif
+!**/assets/**/*.webp
+!**/public/**/*.png
+!**/public/**/*.jpg
+!**/public/**/*.gif
+!**/public/**/*.webp
+!favicon.ico
+!**/favicon.ico
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Temporary files
+tmp/
+temp/
+tmp/
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Scripts outputs
+aplogs/
+*.jsonl
+
+# Downloaded models
+models/
+*.model
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# =============================================================================
+# END OF GITIGNORE
+# =============================================================================

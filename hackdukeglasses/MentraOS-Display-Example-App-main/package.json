@@ -1,0 +1,25 @@
+{
+  "name": "classwatch-mentra-live-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "bun src/index.ts",
+    "dev": "bun --hot src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"No tests yet\""
+  },
+  "author": "",
+  "license": "MIT",
+  "description": "MentraOS smart-glasses app for live ClassWatch classroom alerts and summaries",
+  "dependencies": {
+    "@mentra/sdk": "^2.1.29",
+    "express": "^4.21.2",
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.14",
+    "@types/ws": "^8.18.0"
+  }
+}
