@@ -52,7 +52,7 @@ export default function StudentDetailModal({ student, open, onClose }: StudentDe
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth="lg"
       fullWidth
       aria-labelledby="student-detail-title"
     >
@@ -84,92 +84,107 @@ export default function StudentDetailModal({ student, open, onClose }: StudentDe
       </DialogTitle>
 
       <DialogContent dividers>
-        {/* Large whiteboard thumbnail */}
-        <Box
-          component="img"
-          src={student.thumbnailUrl}
-          alt={`${student.name}'s whiteboard`}
-          sx={{
-            width: '100%',
-            height: 300,
-            objectFit: 'cover',
-            borderRadius: 2,
-            mb: 2,
-            bgcolor: '#E8E4DC',
-          }}
-        />
-
-        {/* AI flag alert */}
-        {isFlagged && student.currentFlag && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            <Typography variant="body2" fontWeight={600}>
-              {student.currentFlag.reason}
-            </Typography>
-          </Alert>
-        )}
-
-        {/* Metadata row */}
-        <Box sx={{ display: 'flex', gap: 3, mb: 2, flexWrap: 'wrap' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <AssignmentIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-            <Typography variant="body2" color="text.secondary">
-              {student.problemSetTitle}
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <AccessTimeIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-            <Typography variant="body2" color="text.secondary">
-              Last checked: {formatDateTime(student.lastCheckedAt)}
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Progress indicator */}
-        <Box sx={{ mb: 2 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-            <Typography variant="body2" fontWeight={600}>
-              Progress
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {student.progressPercent}%
-            </Typography>
-          </Box>
-          <LinearProgress
-            variant="determinate"
-            value={student.progressPercent}
+        <Box sx={{ display: 'flex', gap: 3 }}>
+          {/* Left: Whiteboard thumbnail */}
+          <Box
             sx={{
-              height: 8,
-              borderRadius: 4,
-              bgcolor: 'rgba(0,0,0,0.06)',
-              '& .MuiLinearProgress-bar': {
-                borderRadius: 4,
-                bgcolor: student.progressPercent >= 90 ? '#4CAF50' : 'primary.main',
-              },
+              flex: '0 0 55%',
+              position: 'relative',
+              aspectRatio: '4 / 3',
+              borderRadius: 2,
+              overflow: 'hidden',
+              bgcolor: '#E8E4DC',
             }}
-          />
-        </Box>
-
-        {/* Confusion highlights */}
-        {isFlagged && student.currentFlag && student.currentFlag.confusionHighlights.length > 0 && (
-          <Box>
-            <Typography variant="body2" fontWeight={600} sx={{ mb: 0.5 }}>
-              Areas of Confusion
-            </Typography>
-            <List dense disablePadding>
-              {student.currentFlag.confusionHighlights.map((highlight, idx) => (
-                <ListItem key={idx} disablePadding sx={{ pl: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 28 }}>
-                    <HelpOutlineIcon sx={{ fontSize: 16, color: 'warning.main' }} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={highlight}
-                    primaryTypographyProps={{ variant: 'body2' }}
-                  />
-                </ListItem>
-              ))}
-            </List>
+          >
+            <Box
+              component="img"
+              src={student.thumbnailUrl}
+              alt={`${student.name}'s whiteboard`}
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
           </Box>
-        )}
+
+          {/* Right: Details */}
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            {/* AI flag alert */}
+            {isFlagged && student.currentFlag && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                <Typography variant="body2" fontWeight={600}>
+                  {student.currentFlag.reason}
+                </Typography>
+              </Alert>
+            )}
+
+            {/* Metadata */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <AssignmentIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                <Typography variant="body2" color="text.secondary">
+                  {student.problemSetTitle}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <AccessTimeIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                <Typography variant="body2" color="text.secondary">
+                  Last checked: {formatDateTime(student.lastCheckedAt)}
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Progress indicator */}
+            <Box sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                <Typography variant="body2" fontWeight={600}>
+                  Progress
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {student.progressPercent}%
+                </Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={student.progressPercent}
+                sx={{
+                  height: 8,
+                  borderRadius: 4,
+                  bgcolor: 'rgba(0,0,0,0.06)',
+                  '& .MuiLinearProgress-bar': {
+                    borderRadius: 4,
+                    bgcolor: student.progressPercent >= 90 ? '#4CAF50' : 'primary.main',
+                  },
+                }}
+              />
+            </Box>
+
+            {/* Confusion highlights */}
+            {isFlagged && student.currentFlag && student.currentFlag.confusionHighlights.length > 0 && (
+              <Box>
+                <Typography variant="body2" fontWeight={600} sx={{ mb: 0.5 }}>
+                  Areas of Confusion
+                </Typography>
+                <List dense disablePadding>
+                  {student.currentFlag.confusionHighlights.map((highlight, idx) => (
+                    <ListItem key={idx} disablePadding sx={{ pl: 1 }}>
+                      <ListItemIcon sx={{ minWidth: 28 }}>
+                        <HelpOutlineIcon sx={{ fontSize: 16, color: 'warning.main' }} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={highlight}
+                        primaryTypographyProps={{ variant: 'body2' }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
+          </Box>
+        </Box>
       </DialogContent>
 
       {isFlagged && (
