@@ -77,7 +77,7 @@ These questions were blocking. All are now resolved.
 
 2. **Flag resolution** — The AI writes new snapshots with updated status; the dashboard polls every 7s and detects transitions. Teacher "Mark as resolved" is UI-only for now (clears the flag locally in mock mode; Supabase update pending).
 
-3. **Polling** — Polling at 7s intervals via `useStudentPolling` hook. Supabase Realtime is not used (sufficient for demo).
+3. **Real-time updates** — Supabase Postgres Changes via `useRealtimeFlags()` hook streams AI flags in near real-time. Fallback polling is available via `useStudentPolling` hook for resilience.
 
 4. **confusionHighlights format** — Array of short AI-generated text strings identifying specific issues (e.g. `["no algebraic work shown", "image unrelated to problem"]`). Stored as `jsonb` in `ai_flags.confusion_highlights`.
 

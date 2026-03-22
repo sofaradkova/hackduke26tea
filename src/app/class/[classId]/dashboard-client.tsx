@@ -8,6 +8,7 @@ import StudentGrid from '@/components/dashboard/StudentGrid'
 import StudentDetailModal from '@/components/student-modal/StudentDetailModal'
 import AnalyticsHeader from '@/components/analytics/AnalyticsHeader'
 import { useStudentPolling } from '@/hooks/use-student-polling'
+import { useRealtimeFlags } from '@/hooks/use-realtime-flags'
 import { useClassData } from '@/context/class-context'
 import { useSession } from '@/context/session-context'
 
@@ -21,6 +22,7 @@ export default function DashboardClient({ classId, className }: DashboardClientP
   const { selectedStudentId, setSelectedStudentId } = useSession()
 
   useStudentPolling(classId)
+  useRealtimeFlags(classId)
 
   const selectedStudent = students.find((s) => s.id === selectedStudentId) ?? null
 
