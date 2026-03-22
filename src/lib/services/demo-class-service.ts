@@ -3,15 +3,7 @@ import type { ClassService } from './class-service'
 import type { AnalyticsSnapshot, ClassData, FlagCategory, Student } from '@/lib/types'
 import { generateWhiteboardSvg } from '@/lib/whiteboard-thumbnails'
 
-const DEMO_CLASS_ID = 'demo-live'
-
-const DEMO_CLASS_ENTRY: ClassData = {
-  id: DEMO_CLASS_ID,
-  name: 'Live Demo — Algebra II',
-  subject: 'Mathematics',
-  studentCount: 0,
-  students: [],
-}
+const DEMO_CLASS_ID = 'class-demo'
 
 interface BackendDemoResponse {
   classId: string
@@ -111,14 +103,14 @@ export class DemoClassService implements ClassService {
   private cachedStudents: { students: readonly Student[]; ts: number } | null = null
 
   async getClasses(): Promise<readonly ClassData[]> {
-    const mockClasses = await this.mock.getClasses()
-    return [...mockClasses, DEMO_CLASS_ENTRY]
+    return this.mock.getClasses()
   }
 
   async getClass(classId: string): Promise<ClassData | null> {
     if (classId !== DEMO_CLASS_ID) return this.mock.getClass(classId)
+    const mockClass = await this.mock.getClass(classId)
     const students = await this.getStudents(classId)
-    return { ...DEMO_CLASS_ENTRY, studentCount: students.length, students }
+    return { ...(mockClass ?? { id: DEMO_CLASS_ID, name: 'Demo Class', subject: 'Mathematics', studentCount: 0, students: [] }), studentCount: students.length, students }
   }
 
   async getStudents(classId: string): Promise<readonly Student[]> {
